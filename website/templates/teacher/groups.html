@@ -1,0 +1,38 @@
+{% extends "base.html" %} {% block title %}Classes{% endblock %}
+
+{% block content %}
+<br>
+<h1>Classes</h1>
+<br>
+<div class="row row-cols-1 row-cols-md-2 g-4">
+  {% for group in user.teacher_id.group_ids %}
+    <form method="POST">
+      
+        <div class="col p-3">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">{{ group.name }}</h5>
+              <p>Class code: {{ group.id }}</p>
+              <button class="btn btn-primary" name="button" value="{{ group.id }}">View</button>
+
+            </div>
+          </div>
+        </div>
+        
+    </form>
+    {% endfor %}
+    <form method="POST">
+          <div class="col p-3">
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">Add New</h5>
+                  <input type="text" class="form-control" name="name" id="name" placeholder="Name">
+                  <br>
+                  <button type="submit" class="btn btn-outline-primary btn-block" name="button" value="add_new">Add new</button>
+                </div>
+              </div>
+        </div>
+    </form>
+  
+  </div>
+{% endblock %}

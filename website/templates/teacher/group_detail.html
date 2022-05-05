@@ -1,0 +1,57 @@
+
+{% extends "base.html" %} {% block title %}Classes{% endblock %}
+{% block extra_header %}<form method="POST"><button name="button" class="btn btn-primary" value={{ group.id }}>Topics</button></form>{% endblock %}
+{% block content %}
+<br>
+<h1>{{ group.name }}</h1>
+<br>
+
+<div style="display:flex; flex-direction: row; justify-content: center; align-items: center">
+  {% if group.student_ids: %}
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item">
+      <div class="p-2">
+        <div class="d-flex justify-content-end">
+          {% for topic in group.topic_ids %}
+          {% if topic.active %}
+            <div class="d-flex p-2" ><p style="writing-mode: tb-rl">{{ topic.name }}</p></div>
+            {% endif%}
+          {% endfor %}
+        </div>
+    </li>
+    {% for student in group.student_ids %}
+    <li class="list-group-item">
+
+        <div class="p-2">
+          <div class="d-flex justify-content-center">
+            
+            <div class="d-flex justify-content-between">
+              <div class="p-2" style="width: 200px">{{ student.user.first_name | truncate(22) }}</div>
+                <form method='POST'>
+                  <div class="p-2">
+                    <button type="submit" name="button" class="btn btn-primary" value="more:{{ student.id }}">More</button>
+                  </div>
+                </form>
+              <div style="width:20px"></div>
+            </div>
+              {% for data in student.data_ids %}
+              {% for topic in group.topic_ids %}
+              {% if data.topic_id == topic.id and topic.active%}
+          <div class="d-flex p-2" style="width: 72px; background-color: hsl({{ data.correct*115/data.completed}}, 73%, 83%); border:1px solid black">{{ '%0.1f'| format(data.correct*100/data.completed) }}%</div>
+              {% endif %}
+              {% endfor %}
+              {% endfor %}
+        </div>
+    </li>
+
+  {% endfor %}
+
+
+
+  </ul>
+  {% else %}
+  <p>Once your students sign up you will be able to see them here.</p>
+  {% endif %}
+</div>
+
+{% endblock %}

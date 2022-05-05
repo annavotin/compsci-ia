@@ -1,0 +1,65 @@
+{% extends "base.html" %} {% block title %}Classes{% endblock %}
+
+{% block content %}
+<br>
+<h1>Topics: {{ group.name }}</h1>
+<br>
+<div style="display:flex; flex-direction: row; justify-content: center; align-items: center">
+    <ul class="list-group list-group-flush w-100">
+        {% for topic in group.topic_ids %}
+        <form method='POST'>
+        <li class="list-group-item"><div class="d-flex justify-content-between">
+            <div class="col-sm-9"><p>{{ topic.name }}</p></div>
+
+            <div>
+                
+                {% if topic.locked %}
+                <button name="button" class="btn btn-outline-danger" value="lock{{ topic.id }}">Unlock</button>
+
+                    {% if topic.active %}
+                    <button name="button" class="btn btn-primary" value="{{ topic.id }}" disabled>Remove</button>
+                    {% else %}
+                    <button name="button" class="btn btn-outline-primary" value="{{ topic.id }}" disabled>Add</button>
+                    {% endif %}
+
+                {% else %}
+                <button name="button" class="btn btn-danger" value="lock{{ topic.id }}">Lock</button>
+
+
+                    {% if topic.active %}
+                    <button name="button" class="btn btn-primary" value="{{ topic.id }}">Remove</button>
+                    {% else %}
+                    <button name="button" class="btn btn-outline-primary" value="{{ topic.id }}">Add</button>
+                    {% endif %}
+
+                {% endif %}
+    
+                
+                <button name="button" class="btn btn-primary" value="more{{ topic.id }}">More</button>
+            </div>
+
+        </div></li>
+    </form>
+        {% endfor %}
+
+
+    <form method="POST">
+
+        <li class="list-group-item">
+
+            <div class="col p-3">
+                <div class="card">
+                  <div class="card-body">
+                    <h5 class="card-title">Add New</h5>
+                    <input type="text" class="form-control" name="name" id="name" placeholder="Name">
+                    <br>
+                    <button class="btn btn-outline-primary btn-block" name="button" value="add_new">Add new</button>
+                  </div>
+                </div>
+            </div>
+        </li>
+    </form>
+
+    </ul>
+</div>
+{% endblock %}

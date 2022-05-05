@@ -1,0 +1,21 @@
+{% extends "base.html" %} {% block title %}{{ student.user.first_name }}{% endblock %}
+
+{% block content %}
+<br>
+<h3>{{student.user.first_name}}</h3>
+
+<br>
+<form method='POST'>
+
+<select class="selectpicker" data-style="btn-success" name="menu">
+
+    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+    {% for topic in group.topic_ids %}
+    <option>{{ topic.name }}</option>
+    {% endfor %}
+    </div>
+</select>
+
+<button type="submit" class="btn btn-danger m-4">Reset</button>
+</form>
+{% endblock %}

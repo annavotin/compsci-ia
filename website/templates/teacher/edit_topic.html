@@ -1,0 +1,84 @@
+{% extends "base.html" %} {% block title %}Edit Topic{% endblock %}
+{% block content %}
+<br>
+<h1>Edit Topic</h1>
+<br>
+
+
+<form method='POST'>
+
+
+    <div>
+        <div class="form-group">
+          <label for="exampleInputEmail1">Topic Name</label>
+          <input
+            type="text"
+            class="form-control"
+            id="topicName"
+            name="topicName"
+            placeholder="{{ topic.name }}"
+            />
+        </div>
+        <div class="d-flex flex-row">
+            <div class="p-2"><button name="button" class="btn btn-success" value="save_changes">Save Changes</button></div>
+          </div>
+        <br>
+    </div>
+
+    <br>
+    <br>
+    <div>
+        <h3>Variables</h3>
+
+        <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">Minimum</th>
+                <th scope="col">Maxiumum</th>
+                <th scope="col">Step</th>
+              </tr>
+            </thead>
+            <tbody>
+            {% for variable in topic.variable_ids %}
+              <tr>
+                <th scope="row">{{ variable.id }}</th>
+                <td> <textarea name="name{{variable.id}}" class="form-control" id="minimum" rows="1" placeholder="Name">{{ variable.name }}</textarea></td>
+                <td> <textarea name="min{{variable.id}}" class="form-control" id="minimum" rows="1" placeholder="Minimum">{{ variable.minimum }}</textarea></td>
+                <td> <textarea name="max{{variable.id}}" class="form-control" id="maximum" rows="1" placeholder="Maxiumum">{{ variable.maximum }}</textarea></td>
+                <td> <textarea name="step{{variable.id}}" class="form-control" id="step" rows="1" placeholder="Step">{{ variable.step }}</textarea></td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item"><button name="button" class="btn btn-primary btn-lg btn-block" value="new_variable">New</button></li>
+          </ul>
+    </div>
+    <br>
+    <br>
+    <div>
+      <h3>Problems</h3>
+
+      <ul class="list-group list-group-flush">
+        {% for problem in topic.problem_ids %}
+        <li class="list-group-item">
+                <textarea name="text{{problem.id}}" class="form-control" id="text" rows="3" placeholder="Word Problem">{{ problem.text }}</textarea>
+                <br>
+                <textarea name="latex{{problem.id}}" class="form-control" id="latex" rows="1" placeholder="Latex">{{ problem.latex }}</textarea>
+                <br>
+                <textarea name="answer{{problem.id}}" class="form-control" id="answer" rows="1" placeholder="Answer">{{ problem.answer }}</textarea>
+
+        </li>
+        {% endfor %}
+
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item"><button type="submit" class="btn btn-primary btn-block" name="button" value="new_problem">Add new</button></li>
+      </ul>
+
+    </div>
+
+</form>
+
+{% endblock %}
