@@ -13,7 +13,8 @@
             <div class="card-body">
               <h5 class="card-title">{{ group.name }}</h5>
               <p>Class code: {{ group.id }}</p>
-              <button class="btn btn-primary" name="button" value="{{ group.id }}">View</button>
+              <button class="btn btn-primary" name="button" value="see{{ group.id }}">View</button>
+              <button class="btn btn-danger" name="button" value="del{{ group.id }}">Delete</button>
 
             </div>
           </div>

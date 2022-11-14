@@ -6,7 +6,7 @@ from tokenize import group
 from unicodedata import category
 from flask import Blueprint, flash, render_template, request, flash, jsonify, redirect, url_for
 from flask_login import login_required, login_user, current_user
-from sqlalchemy import null
+from sqlalchemy import delete
 from .. import db
 from ..models import Group, Topic, Data, Problem, Variable, Student
 import json
@@ -15,7 +15,6 @@ from sqlalchemy.sql import func
 views = Blueprint('teacher_views', __name__)
 
 current_group = 0;
-
 
 @views.route('/', methods=['GET', 'POST'])
 @login_required
@@ -31,8 +30,13 @@ def groups():
                 db.session.commit()
                 flash('Note added!', category='success')
             return render_template("teacher/groups.html", user=current_user)
+        elif request.form['button'][:3] == "del":
+            deleted = Group.query.filter_by(id=request.form['button'][3:]).first()
+            db.session.delete(deleted)
+            db.session.commit()
+            return render_template("teacher/groups.html", user=current_user)
         else:
-            return redirect(url_for('teacher_views.group_detail', group_id=request.form['button']))
+            return redirect(url_for('teacher_views.group_detail', group_id=request.form['button'][3:]))
     elif request.method == 'GET':
         return render_template("teacher/groups.html", user=current_user)
 
@@ -43,11 +47,19 @@ def groups():
 def group_detail(group_id):
     if request.method == 'POST' and request.form.get('button').split(':')[0] == 'more':
         return redirect(url_for('teacher_views.student_overview', student_id=request.form.get('button').split(':')[1]))
-    elif request.method == 'POST':
-        return redirect(url_for('teacher_views.topics', group_id=request.form['button']))
+    if request.method == 'POST' and request.form.get('button').split(':')[0] == 'topi':
+        return redirect(url_for('teacher_views.topics', group_id=request.form['button'].split(':')[1]))
     else:
         group = Group.query.filter_by(id=group_id).first()
-        return render_template("teacher/group_detail.html", user=current_user, group=group)
+        students = []
+        condition = ""
+        if request.method == 'POST':
+            condition = request.form['search']
+        for student in group.student_ids:
+            name = student.user.first_name
+            if condition.lower() in name.lower():
+                students.append(student)
+        return render_template("teacher/group_detail.html", user=current_user, group=group, students=students)
 
 
 @views.route('/student_overview/<student_id>', methods=['GET', 'POST'])
