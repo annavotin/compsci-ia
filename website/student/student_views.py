@@ -13,7 +13,7 @@ from website.models import Student, Group, Data, Topic, Problem, Variable
 from website.teacher.teacher_views import topics
 from .. import db
 from sqlalchemy.sql import func
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 import random
 
 
@@ -27,6 +27,7 @@ def dash():
         student = Student.query.filter_by(id=current_user.student_id.id).first()
     else:
         return redirect(url_for("teacher_views.groups", user=current_user))
+    
     group = Group.query.get(student.group_id)
     
     top3 = (db.session.query(Topic, Data)
@@ -44,7 +45,7 @@ def dash():
         .order_by(Data.accuracy.asc())
         .order_by(Topic.name)
         ).limit(3).all()
-        
+    
     value = request.form.get('button')
     if request.method == 'POST' and value:
         topic = Topic.query.get(value)
@@ -57,10 +58,10 @@ def dash():
     #check if any topic questions
     for topic in group.topic_ids:
         if topic.active:
-            days = datetime.now() - topic.date
+            days = datetime.now() - topic.date - timedelta(hours=1)
             data = Data.query.filter_by(student_id=student.id).filter_by(topic_id=topic.id).first()
             #check if it is a square num (if yes there is a question due today)
-            if days.days**(0.5)%1 == 0 and not (data.last_done - datetime.now()).days == -1:
+            if days.seconds >= (data.completed)**2: # and not (data.last_done - datetime.now()).days == -1:
                 return render_template("student/dash.html", user=current_user, student=student, group=group, top3=top3, low3=low3, remaining=True)
    
     return render_template("student/dash.html", user=current_user, student=student, group=group, top3=top3, low3=low3, remaining=False)
@@ -180,10 +181,13 @@ def question(problem_id, continuous):
 def checkTopics(group, student, isRedirect):
     for topic in group.topic_ids:
         if topic.active:
-            days = datetime.now() - topic.date
+            days = datetime.now() - topic.date - timedelta(hours=1)
             data = Data.query.filter_by(student_id=student.id).filter_by(topic_id=topic.id).first()
             #check if it is a square num (if yes there is a question due today)
-            if days.days**(0.5)%1 == 0 and not (data.last_done - datetime.now()).days == -1 and topic.problem_ids:
+            if days.seconds >= (data.completed)**2 and topic.problem_ids:
+                flash("NOW" + str(datetime.now))
+                flash("Date" + str(topic.date))
+                flash("Difference" + str(days))
                 #check if the last time a problem was done was before today
                 if data.last_done < datetime.now():
                     question_index = random.randrange(len(topic.problem_ids))
