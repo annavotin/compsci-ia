@@ -1,4 +1,11 @@
 {% extends "base.html" %} {% block title %}Edit Topic{% endblock %}
+
+{% block extra_header %}
+<a href="{{url_for('teacher_views.topics', group_id=group.id)}}">
+    <button class="btn btn-light ml-3" type="button" name="button">Back</button>
+</a>
+{% endblock %}
+
 {% block content %}
 <br>
 <h1>Edit Topic</h1>
@@ -66,8 +73,7 @@
         <li class="list-group-item">
                 <textarea name="text{{problem.id}}" class="form-control" id="text" rows="3" placeholder="Word Problem">{{ problem.text }}</textarea>
                 <br>
-                <textarea name="latex{{problem.id}}" class="form-control" id="latex" rows="1" placeholder="Latex">{{ problem.latex }}</textarea>
-                <br>
+
                 <textarea name="answer{{problem.id}}" class="form-control" id="answer" rows="1" placeholder="Answer">{{ problem.answer }}</textarea>
 
         </li>

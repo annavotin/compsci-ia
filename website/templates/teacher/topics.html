@@ -1,5 +1,9 @@
 {% extends "base.html" %} {% block title %}Classes{% endblock %}
-
+{% block extra_header %}
+<a href="{{url_for('teacher_views.group_detail', group_id=group.id)}}">
+    <button class="btn btn-light ml-3" type="button" name="button">Back</button>
+</a>
+{% endblock %}
 {% block content %}
 <br>
 <h1>Topics: {{ group.name }}</h1>

@@ -1,11 +1,17 @@
 
 {% extends "base.html" %} {% block title %}Classes{% endblock %}
-{% block extra_header %}<form method="POST"><button name="button" class="btn btn-primary" value="topi:{{ group.id }}">Topics</button></form>{% endblock %}
+{% block extra_header %}<form method="POST"><button name="button" class="btn btn-primary" value="topi:{{ group.id }}">Topics</button></form>
+<a href="{{url_for('teacher_views.groups', index=0)}}">
+  <button class="btn btn-light ml-3" type="button" name="button">Back</button>
+</a>
+
+{% endblock %}
 {% block content %}
 <br>
 <h1>{{ group.name }}</h1>
 <br>
 <form method='POST'>
+<br>
 <div class="input-group mb-3">
   <input name="search" type="text" class="form-control" placeholder="Search..." aria-label="Username" aria-describedby="basic-addon1">
   <div class="input-group-append">
