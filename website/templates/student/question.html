@@ -1,0 +1,30 @@
+{% extends "base.html" %} {% block title %}Questions{% endblock %}
+
+{% block content %}
+
+<br>
+<h1>Question</h1>
+<form method='POST'>
+<br>
+<p class="text-justify">{{ text }}</p>
+<br>
+</form>
+
+<form method='POST' class="form-inline">
+  
+    <div class="form-group mx-sm-3 mb-2">
+      <label for="answer" class="sr-only">Answer</label>
+      <input type="number" step="0.0001" class="form-control" id="answer" name="answer" placeholder="Answer">
+    </div>
+    <button type="submit" class="btn btn-primary mb-2" name="button" value="{{ answer }}:{{ text }}:{{ topic.id }}">Submit</button>
+    
+</form>
+
+<br>
+<div class="form-group">
+    <label for="work_area">Work Area</label>
+    <textarea class="form-control" id="work_area" rows="3"></textarea>
+</div>
+
+
+{% endblock %}

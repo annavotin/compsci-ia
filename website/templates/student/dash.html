@@ -1,0 +1,69 @@
+{% extends "base.html" %} {% block title %}Dashboard{% endblock %}
+{% block content %}
+<br>
+<h1>{{ user.first_name }}'s Dashboard</h1>
+<br>
+<div class="d-flex justify-content-between p-3" style="border:1px solid black">
+    <h3>Today</h3>
+    <form method="POST">
+    {% if remaining %}
+    <button type="submit" class="btn btn-primary">Start</button>
+    {% else %}
+    <h3 class="p-3" style="color: #009900;">All Done!</h3>
+    {% endif %}
+    </form>
+</div>
+<br>
+<div>
+    <div>
+        <h3>Secure</h3>
+        <ul class="list-group list-group-flush">
+            {% for topic in top3 %}
+            <li class="list-group-item">{{ topic[0].name }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    <br>
+    <div>
+        <h3>Needs Work</h3>
+        <ul class="list-group list-group-flush">
+            {% for topic in low3 %}
+            <li class="list-group-item">{{ topic[0].name }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+<br>
+<div>
+    <div class="p-2">
+        <div class="d-flex justify-content-center">
+        {% for topic in group.topic_ids %}
+        {% if topic.active %}
+        <div class="d-flex p-2" ><p style="writing-mode: tb-rl">{{ topic.name }}</p></div>
+        {% endif%}
+        {% endfor %}
+    </div>
+    <div class="d-flex justify-content-center">
+    {% for data in student.data_ids %}
+        {% for topic in group.topic_ids %}
+        {% if data.topic_id == topic.id and topic.active%}
+        <div class="d-flex p-2" style="width: 72px; background-color: hsl({{ data.correct*115/data.completed}}, 73%, 83%); border:1px solid black">{{ '%0.1f'| format(data.correct*100/data.completed) }}%</div>
+        {% endif %}
+        {% endfor %}
+    {% endfor %}
+    </div>
+    <form method="POST">
+    <div class="d-flex justify-content-center">
+        {% for data in student.data_ids %}
+            {% for topic in group.topic_ids %}
+            {% if data.topic_id == topic.id and topic.active%}
+            <button type="submit" name="button" class="btn btn-info p-2" style="width: 72px; border:1px solid black;" value="{{ topic.id }}">Study</button>
+            {% endif %}
+            {% endfor %}
+        {% endfor %}
+    </div>
+    </form>
+</div>
+<br>
+<br>
+{% endblock %}🎉
