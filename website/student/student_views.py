@@ -1,28 +1,19 @@
-from audioop import avg
-from crypt import methods
-from curses import curs_set
-from hashlib import new
-import json
-from typing import final
-from unicodedata import category
-from xmlrpc.client import DateTime
-from flask import Blueprint, flash, render_template, request, flash, jsonify, redirect, url_for
-from flask_login import login_required, login_user, current_user
+from flask import Blueprint, flash, render_template, request, flash, redirect, url_for
+from flask_login import login_required, current_user
 
 from website.models import Student, Group, Data, Topic, Problem, Variable
-from website.teacher.teacher_views import topics
 from .. import db
-from sqlalchemy.sql import func
-from datetime import date, datetime, timedelta
+from datetime import datetime, timedelta
 import random
 
 
 views = Blueprint('student_views', __name__)
 
-
+#student dashboard
 @views.route('/dash', methods=['GET', 'POST'])
 @login_required
 def dash():
+    #if the current user is a Teacher redirect to the Teacher homepage
     if current_user.student_id:
         student = Student.query.filter_by(id=current_user.student_id.id).first()
     else:
@@ -30,6 +21,7 @@ def dash():
     
     group = Group.query.get(student.group_id)
     
+    #find the student's three strongest and weakest topics
     top3 = (db.session.query(Topic, Data)
         .join(Data)
         .filter(Data.student_id == student.id)
@@ -37,7 +29,6 @@ def dash():
         .order_by(Data.accuracy.desc())
         .order_by(Topic.name)
         ).limit(3).all()
-
     low3 = (db.session.query(Topic, Data)
         .join(Data)
         .filter(Data.student_id == student.id)
@@ -61,7 +52,7 @@ def dash():
             days = datetime.now() - topic.date - timedelta(hours=1)
             data = Data.query.filter_by(student_id=student.id).filter_by(topic_id=topic.id).first()
             #check if it is a square num (if yes there is a question due today)
-            if days.seconds >= (data.completed)**2: # and not (data.last_done - datetime.now()).days == -1:
+            if days.seconds >= (data.completed)**2 and topic.problem_ids: # and not (data.last_done - datetime.now()).days == -1:
                 return render_template("student/dash.html", user=current_user, student=student, group=group, top3=top3, low3=low3, remaining=True)
    
     return render_template("student/dash.html", user=current_user, student=student, group=group, top3=top3, low3=low3, remaining=False)
