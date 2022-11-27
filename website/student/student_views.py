@@ -82,7 +82,7 @@ def question(problem_id, continuous):
         
         if request.form.get('answer'):
             if round(float(request.form.get('answer')), 2) == round(float(request.form['button'].split(":")[0]),2):
-                flash('CORRECTTTT!!!!!!!!!!!!!!!!!!!!! 🎉🎉🎉🎉🎉🎉🎉')
+                flash('Correct!')
                 
                 data = Data.query.filter_by(student_id=student.id).filter_by(topic_id=request.form['button'].split(":")[2]).first()
                 
@@ -185,9 +185,6 @@ def checkTopics(group, student, isRedirect):
             data = Data.query.filter_by(student_id=student.id).filter_by(topic_id=topic.id).first()
             #check if it is a square num (if yes there is a question due today)
             if days.seconds >= (data.completed)**2 and topic.problem_ids:
-                flash("NOW" + str(datetime.now))
-                flash("Date" + str(topic.date))
-                flash("Difference" + str(days))
                 #check if the last time a problem was done was before today
                 if data.last_done < datetime.now():
                     question_index = random.randrange(len(topic.problem_ids))
@@ -217,8 +214,6 @@ def checkTopics(group, student, isRedirect):
                         else:
                             answer += i
 
-                    flash('FINAL TOPIC FOUND')
-                    print('FINAL TOPIC FOUND')
                     final_ans = eval(answer)
                     if isRedirect:
                         return redirect(url_for('student_views.question', user=current_user, continuous="False", student=student, group=group, problem=problem, problem_id=problem.id, variables=variables, text=text, topic=topic, answer=final_ans))
@@ -256,8 +251,6 @@ def checkThisTopic(group, topic, student, isRedirect):
                 answer += str(variables[variable.name])
             else:
                 answer += i
-        flash('FINAL TOPIC FOUND')
-        print('FINAL TOPIC FOUND')
         final_ans = eval(answer)
         if isRedirect:
             return redirect(url_for('student_views.question', user=current_user, student=student, continuous="True", group=group, problem=problem, problem_id=problem.id, variables=variables, text=text, topic=topic, answer=final_ans))
