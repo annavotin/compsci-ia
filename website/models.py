@@ -2,7 +2,7 @@ from . import db
 from flask_login import UserMixin
 from sqlalchemy.sql import func
 
-class User(db.Model, UserMixin):
+class User(db.Model, UserMixin):                                                        # type: ignore
     id = db.Column(db.Integer, primary_key=True)
 
     email = db.Column(db.String(150), unique=True)
@@ -12,14 +12,14 @@ class User(db.Model, UserMixin):
     teacher_id = db.relationship('Teacher', uselist=False, backref="user")
     student_id = db.relationship('Student', uselist=False, backref="user")
 
-class Student(db.Model):
+class Student(db.Model):                                                        # type: ignore
     id = db.Column(db.Integer, primary_key=True)
 
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     group_id = db.Column(db.Integer, db.ForeignKey('group.id'))
     data_ids = db.relationship('Data')
 
-class Teacher(db.Model):
+class Teacher(db.Model):                                                        # type: ignore
     id = db.Column(db.Integer, primary_key=True)
 
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
@@ -34,6 +34,7 @@ class Group(db.Model):
 
     student_ids = db.relationship('Student')
     topic_ids = db.relationship('Topic')
+
 
 class Topic(db.Model):
     id = db.Column(db.Integer, primary_key=True)

@@ -11,7 +11,7 @@ views = Blueprint('teacher_views', __name__)
 current_group = 0;
 
 #teacher overview of all of their classes
-@views.route('/', methods=['GET', 'POST'])
+@views.route('/', methods=['GET', 'POST'])  # type: ignore
 @login_required
 def groups():
     #button is pressed
@@ -20,10 +20,10 @@ def groups():
         #button to add new group
         if request.form['button'] == "add_new":
             name = request.form.get('name')
-            if len(name) < 1:
+            if len(str(name)) < 1:
                 flash('Name is too short!', category='error')
             else:
-                new_group = Group(name=name, teacher_id=current_user.teacher_id.id)
+                new_group = Group(name=name, teacher_id=current_user.teacher_id.id)# type: ignore
                 db.session.add(new_group)
                 db.session.commit()
                 flash('Note added!', category='success')
@@ -52,11 +52,11 @@ def groups():
 @login_required
 def group_detail(group_id):
     #open detail view of student
-    if request.method == 'POST' and request.form.get('button').split(':')[0] == 'more':
-        return redirect(url_for('teacher_views.student_overview', student_id=request.form.get('button').split(':')[1]))
+    if request.method == 'POST' and request.form.get('button').split(':')[0] == 'more':# type: ignore
+        return redirect(url_for('teacher_views.student_overview', student_id=request.form.get('button').split(':')[1]))# type: ignore
     
     #open list of Topics in the current Group
-    if request.method == 'POST' and request.form.get('button').split(':')[0] == 'topi':
+    if request.method == 'POST' and request.form.get('button').split(':')[0] == 'topi':# type: ignore
         return redirect(url_for('teacher_views.topics', group_id=request.form['button'].split(':')[1]))
     
     else:
@@ -65,6 +65,7 @@ def group_detail(group_id):
         condition = ""
         if request.method == 'POST':
             condition = request.form['search']
+        #linear search, because multiple students may have names that fit the prompt
         for student in group.student_ids:
             name = student.user.first_name
             if condition.lower() in name.lower():
@@ -89,7 +90,7 @@ def student_overview(student_id):
     return render_template("teacher/student_overview.html", user=current_user, student=student, group=group)
 
 #list of Topics
-@views.route('/group-detail/<group_id>/topics', methods=['GET', 'POST'])
+@views.route('/group-detail/<group_id>/topics', methods=['GET', 'POST'])# type: ignore
 @login_required
 def topics(group_id):
     group = Group.query.filter_by(id=group_id).first()
@@ -98,7 +99,7 @@ def topics(group_id):
         #'new Topic' button pressed
         if value == "add_new":
             name = request.form.get('name')
-            if len(name) < 1:
+            if len(str(name)) < 1:
                 flash('Name is too short!', category='error')
             else:
                 new_topic = Topic(name=name, active=False, locked=True, group_id=group.id, instances=0)
@@ -149,7 +150,7 @@ def topics(group_id):
 
 
 #detail view of Topic
-@views.route('/group-detail/<group_id>/topics/edit_topic/<topic_id>', methods=['GET', 'POST'])
+@views.route('/group-detail/<group_id>/topics/edit_topic/<topic_id>', methods=['GET', 'POST'])# type: ignore
 @login_required
 def edit_topic(group_id, topic_id):
     group = Group.query.get(group_id)
