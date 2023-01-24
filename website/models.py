@@ -84,3 +84,4 @@ class Data(db.Model):
 
     topic_id = db.Column(db.Integer, db.ForeignKey('topic.id'))
     student_id = db.Column(db.Integer, db.ForeignKey('student.id'))
+    
